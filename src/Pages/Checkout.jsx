@@ -6,7 +6,7 @@ import {
   FormControlLabel, FormLabel, Divider, Alert, Chip,
 } from "@mui/material";
 import {
-  LocalShipping, Payment, CheckCircle, ArrowBack, ArrowForward, Lock,
+  LocalShipping, Payment, ArrowBack, ArrowForward, Lock,
 } from "@mui/icons-material";
 import { useCart } from "../Context/CartContext";
 

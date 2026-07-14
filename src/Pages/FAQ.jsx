@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  Box, Container, Grid, Typography, Card, CardContent,
+  Box, Container, Grid, Typography, Card,
   Accordion, AccordionSummary, AccordionDetails, Button, Chip,
 } from "@mui/material";
 import { ExpandMore, Help, Email, Phone } from "@mui/icons-material";

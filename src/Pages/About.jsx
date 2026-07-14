@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Box, Container, Grid, Typography, Card, CardContent, Avatar, Divider,
+  Box, Container, Grid, Typography, Card, Avatar, Divider,
 } from "@mui/material";
 
 const stats = [

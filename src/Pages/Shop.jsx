@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  Box, Container, Grid, Typography, Button, Card, CardContent,
+  Box, Container, Grid, Typography, Button, Card,
   Checkbox, FormControlLabel, FormGroup, Divider, Slider,
   MenuItem, Select, InputLabel, FormControl, Chip, IconButton,
   Drawer, useMediaQuery, useTheme, Badge, Collapse,
