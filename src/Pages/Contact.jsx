@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   Box, Container, Grid, Typography, Card, CardContent,
-  TextField, Button, Divider, Alert,
+  TextField, Button, Divider, Alert, MenuItem,
 } from "@mui/material";
 import {
   LocationOn, Phone, Email, AccessTime, Send, CheckCircle,
@@ -143,10 +143,22 @@ export default function Contact() {
                       <Grid item xs={12} sm={6}>
                         <TextField label="Phone (optional)" fullWidth type="tel" value={form.phone} onChange={handleChange("phone")} sx={fieldSx} />
                       </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField label="Topic" fullWidth required select value={form.subject} onChange={handleChange("subject")} error={!!errors.subject} helperText={errors.subject} sx={fieldSx}>
-                          <option value="" disabled hidden>Select a topic</option>
-                          {topics.map((t) => <option key={t} value={t}>{t}</option>)}
+      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Topic"
+                          fullWidth
+                          required
+                          select
+                          value={form.subject}
+                          onChange={handleChange("subject")}
+                          error={!!errors.subject}
+                          helperText={errors.subject}
+                          sx={fieldSx}
+                          SelectProps={{ native: false }}
+                        >
+                          {topics.map((t) => (
+                            <MenuItem key={t} value={t}>{t}</MenuItem>
+                          ))}
                         </TextField>
                       </Grid>
                       <Grid item xs={12}>

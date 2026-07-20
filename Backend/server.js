@@ -7,7 +7,22 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    // and any localhost port during development
+    const allowed = [
+      process.env.FRONTEND_URL,
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ].filter(Boolean);
+
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      // In production allow the deployed frontend domain
+      callback(null, true); // loosen for now; tighten once domain is known
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
