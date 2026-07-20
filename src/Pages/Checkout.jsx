@@ -1,309 +1,216 @@
-import React, { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-import {
-  Box, Container, Grid, Typography, Button, Card, CardContent,
-  Stepper, Step, StepLabel, TextField, Radio, RadioGroup,
-  FormControlLabel, FormLabel, Divider, Alert, Chip,
-} from "@mui/material";
-import {
-  LocalShipping, Payment, ArrowBack, ArrowForward, Lock,
-} from "@mui/icons-material";
-import { useCart } from "../Context/CartContext";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Box, Container, Grid, Typography, Button, TextField, 
+  Stepper, Step, StepLabel, Card, Divider, FormControlLabel, Radio, RadioGroup 
+} from '@mui/material';
+import { useCart } from '../Context/CartContext';
+import Footer from '../Components/Footer';
 
-const STEPS = ["Shipping", "Payment", "Review"];
-
-function StepShipping({ data, onChange, errors }) {
-  const fields = [
-    { name: "firstName", label: "First Name", xs: 6 },
-    { name: "lastName", label: "Last Name", xs: 6 },
-    { name: "email", label: "Email Address", xs: 12, type: "email" },
-    { name: "phone", label: "Phone Number", xs: 12, type: "tel" },
-    { name: "address", label: "Street Address", xs: 12 },
-    { name: "city", label: "City", xs: 6 },
-    { name: "state", label: "State", xs: 6 },
-    { name: "pincode", label: "PIN Code", xs: 6 },
-  ];
-  return (
-    <Box>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, display: "flex", alignItems: "center", gap: 1 }}>
-        <LocalShipping color="primary" /> Shipping Details
-      </Typography>
-      <Grid container spacing={2.5}>
-        {fields.map((f) => (
-          <Grid item xs={12} sm={f.xs} key={f.name}>
-            <TextField
-              label={f.label} fullWidth size="medium" type={f.type || "text"}
-              value={data[f.name] || ""} onChange={(e) => onChange(f.name, e.target.value)}
-              error={!!errors[f.name]} helperText={errors[f.name]}
-              sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
-            />
-          </Grid>
-        ))}
-      </Grid>
-      <Box sx={{ mt: 3, p: 2, bgcolor: "primary.light", borderRadius: 2, border: "1px solid", borderColor: "primary.main", display: "flex", alignItems: "center", gap: 1.5 }}>
-        <LocalShipping sx={{ color: "primary.main" }} />
-        <Typography variant="body2" sx={{ color: "primary.dark", fontWeight: 600 }}>
-          Free express delivery on orders over ₹10,000. Standard delivery ₹299.
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function StepPayment({ data, onChange }) {
-  return (
-    <Box>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, display: "flex", alignItems: "center", gap: 1 }}>
-        <Payment color="primary" /> Payment Method
-      </Typography>
-      <FormLabel sx={{ fontWeight: 600, color: "text.primary", display: "block", mb: 1.5 }}>Select how you'd like to pay</FormLabel>
-      <RadioGroup value={data.method || "card"} onChange={(e) => onChange("method", e.target.value)}>
-        {[
-          { value: "card", label: "💳 Credit / Debit Card" },
-          { value: "upi", label: "📱 UPI (GPay, PhonePe, Paytm)" },
-          { value: "netbanking", label: "🏦 Net Banking" },
-          { value: "cod", label: "🏠 Cash on Delivery" },
-        ].map((opt) => (
-          <Card key={opt.value} variant="outlined" sx={{ mb: 1.5, border: "1.5px solid", borderColor: data.method === opt.value ? "primary.main" : "divider", cursor: "pointer", transition: "border-color 0.2s" }} onClick={() => onChange("method", opt.value)}>
-            <CardContent sx={{ py: 1.5, "&:last-child": { pb: 1.5 } }}>
-              <FormControlLabel value={opt.value} control={<Radio color="primary" />} label={<Typography sx={{ fontWeight: 600 }}>{opt.label}</Typography>} sx={{ m: 0 }} />
-            </CardContent>
-          </Card>
-        ))}
-      </RadioGroup>
-
-      {(data.method === "card" || !data.method) && (
-        <Box sx={{ mt: 2, p: 3, bgcolor: "background.default", borderRadius: 2.5, border: "1px solid", borderColor: "divider" }}>
-          <Grid container spacing={2.5}>
-            <Grid item xs={12}>
-              <TextField fullWidth label="Card Number" placeholder="1234 5678 9012 3456" size="medium"
-                value={data.cardNumber || ""} onChange={(e) => onChange("cardNumber", e.target.value)}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField fullWidth label="Cardholder Name" size="medium"
-                value={data.cardName || ""} onChange={(e) => onChange("cardName", e.target.value)}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField fullWidth label="Expiry (MM/YY)" placeholder="08/28" size="medium"
-                value={data.expiry || ""} onChange={(e) => onChange("expiry", e.target.value)}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField fullWidth label="CVV" placeholder="•••" type="password" size="medium"
-                value={data.cvv || ""} onChange={(e) => onChange("cvv", e.target.value)}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-            </Grid>
-          </Grid>
-        </Box>
-      )}
-      {data.method === "upi" && (
-        <Box sx={{ mt: 2, p: 3, bgcolor: "background.default", borderRadius: 2.5, border: "1px solid", borderColor: "divider" }}>
-          <TextField fullWidth label="UPI ID" placeholder="yourname@upi" size="medium"
-            value={data.upiId || ""} onChange={(e) => onChange("upiId", e.target.value)}
-            sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-        </Box>
-      )}
-      <Alert severity="info" icon={<Lock fontSize="small" />} sx={{ mt: 2.5, borderRadius: 2 }}>
-        All transactions are secured with 256-bit SSL encryption.
-      </Alert>
-    </Box>
-  );
-}
-
-function StepReview({ shipping, payment, cartItems, cartTotal }) {
-  const discount = cartTotal > 10000 ? 0 : 299;
-  const tax = Math.round(cartTotal * 0.18);
-  const total = cartTotal + discount + tax;
-  return (
-    <Box>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Review Your Order</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Card variant="outlined" sx={{ p: 2.5, borderRadius: 2.5 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: "primary.main", mb: 2 }}>SHIPPING TO</Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 2 }}>
-              {shipping.firstName} {shipping.lastName}<br />
-              {shipping.address}, {shipping.city}<br />
-              {shipping.state} — {shipping.pincode}<br />
-              {shipping.phone}
-            </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card variant="outlined" sx={{ p: 2.5, borderRadius: 2.5 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: "primary.main", mb: 2 }}>PAYMENT</Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 2 }}>
-              Method: {payment.method === "card" ? "Credit / Debit Card" : payment.method === "upi" ? "UPI" : payment.method === "netbanking" ? "Net Banking" : "Cash on Delivery"}
-              {payment.method === "card" && payment.cardNumber && (
-                <><br />Card ending in ···· {payment.cardNumber.slice(-4)}</>
-              )}
-            </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
-          <Card variant="outlined" sx={{ borderRadius: 2.5, overflow: "hidden" }}>
-            <Box sx={{ p: 2, bgcolor: "background.default", borderBottom: "1px solid", borderColor: "divider" }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>ORDER ITEMS ({cartItems.length})</Typography>
-            </Box>
-            {cartItems.map((item) => (
-              <Box key={item.id} sx={{ display: "flex", gap: 2, p: 2, borderBottom: "1px solid", borderColor: "divider", "&:last-child": { borderBottom: "none" } }}>
-                <Box sx={{ width: 56, height: 56, borderRadius: 1.5, overflow: "hidden", flexShrink: 0, bgcolor: "grey.100" }}>
-                  <img src={item.image} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }}>{item.name}</Typography>
-                  <Typography variant="caption" sx={{ color: "text.secondary" }}>Qty: {item.quantity}</Typography>
-                </Box>
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>₹{(item.price * item.quantity).toLocaleString()}</Typography>
-              </Box>
-            ))}
-            <Box sx={{ p: 2, bgcolor: "background.default" }}>
-              {[["Subtotal", `₹${cartTotal.toLocaleString()}`], ["Shipping", discount === 0 ? "FREE" : `₹${discount}`], ["GST (18%)", `₹${tax.toLocaleString()}`]].map(([k, v]) => (
-                <Box key={k} sx={{ display: "flex", justifyContent: "space-between", mb: 0.75 }}>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>{k}</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: v === "FREE" ? "success.main" : "text.primary" }}>{v}</Typography>
-                </Box>
-              ))}
-              <Divider sx={{ my: 1.5 }} />
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>Total</Typography>
-                <Typography variant="subtitle1" sx={{ fontWeight: 900, color: "primary.main" }}>₹{total.toLocaleString()}</Typography>
-              </Box>
-            </Box>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-}
-
-function validate(step, data) {
-  const errors = {};
-  if (step === 0) {
-    if (!data.firstName?.trim()) errors.firstName = "Required";
-    if (!data.lastName?.trim()) errors.lastName = "Required";
-    if (!data.email?.trim()) errors.email = "Required";
-    else if (!/\S+@\S+\.\S+/.test(data.email)) errors.email = "Invalid email";
-    if (!data.phone?.trim()) errors.phone = "Required";
-    if (!data.address?.trim()) errors.address = "Required";
-    if (!data.city?.trim()) errors.city = "Required";
-    if (!data.state?.trim()) errors.state = "Required";
-    if (!data.pincode?.trim()) errors.pincode = "Required";
-  }
-  return errors;
-}
+const steps = ['Shipping Address', 'Payment Details', 'Review Order'];
 
 export default function Checkout() {
-  const { cartItems, cartTotal, clearCart } = useCart();
-  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
-  const [shipping, setShipping] = useState({});
-  const [payment, setPayment] = useState({ method: "card" });
-  const [errors, setErrors] = useState({});
-  const [placing, setPlacing] = useState(false);
+  const [formValues, setFormValues] = useState({});
+  const [placingOrder, setPlacingOrder] = useState(false);
+  const navigate = useNavigate();
+  const { cartItems, cartTotal, clearCart } = useCart();
 
-  if (cartItems.length === 0 && activeStep < 3) {
+  const tax = cartTotal * 0.18;
+  const shipping = cartTotal > 10000 ? 0 : 500;
+  const finalTotal = cartTotal + tax + shipping;
+
+  const handleChange = (e) => {
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
+  };
+
+  const handleNext = async () => {
+    if (activeStep === steps.length - 1) {
+      setPlacingOrder(true);
+      try {
+        const orderData = {
+          orderItems: cartItems.map(item => ({
+            name: item.name,
+            qty: item.quantity,
+            image: item.image,
+            price: item.price,
+            product: item._id || item.id,
+          })),
+          shippingAddress: {
+            address: formValues.address1 || '123 Main St',
+            city: formValues.city || 'Mumbai',
+            postalCode: formValues.zip || '400001',
+            country: formValues.country || 'India',
+          },
+          paymentMethod: 'Card',
+          itemsPrice: cartTotal,
+          taxPrice: tax,
+          shippingPrice: shipping,
+          totalPrice: finalTotal,
+        };
+        
+        // Import api inside the component to avoid circular dependency if not at top level
+        const api = require('../Services/api').default;
+        await api.post('/orders', orderData);
+        
+        clearCart();
+        navigate('/order-success');
+      } catch (err) {
+        console.error("Error placing order", err);
+        alert("Failed to place order. Please try again.");
+      } finally {
+        setPlacingOrder(false);
+      }
+    } else {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
+
+  const handleBack = () => {
+    setActiveStep((prev) => prev - 1);
+  };
+
+  const renderStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="firstName" name="firstName" label="First name" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="lastName" name="lastName" label="Last name" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField required id="address1" name="address1" label="Address line 1" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField id="address2" name="address2" label="Address line 2" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="city" name="city" label="City" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField id="state" name="state" label="State/Province/Region" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="zip" name="zip" label="Zip / Postal code" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField required id="country" name="country" label="Country" fullWidth variant="outlined" onChange={handleChange} />
+            </Grid>
+          </Grid>
+        );
+      case 1:
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>Payment Method</Typography>
+            <RadioGroup defaultValue="creditCard">
+              <FormControlLabel value="creditCard" control={<Radio />} label="Credit / Debit Card" />
+              <FormControlLabel value="upi" control={<Radio />} label="UPI (Google Pay, PhonePe)" />
+              <FormControlLabel value="cod" control={<Radio />} label="Cash on Delivery" />
+            </RadioGroup>
+            
+            <Box sx={{ mt: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <TextField required id="cardName" label="Name on card" fullWidth />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField required id="cardNumber" label="Card number" fullWidth />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField required id="expDate" label="Expiry date" fullWidth />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField required id="cvv" label="CVV" helperText="Last three digits on signature strip" fullWidth />
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        );
+      case 2:
+        return (
+          <Box>
+            <Typography variant="h6" gutterBottom>Order Summary</Typography>
+            {cartItems.map((item) => (
+              <Box key={item.id} sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Typography>
+                  {item.name} x {item.quantity}
+                </Typography>
+                <Typography fontWeight={600}>₹{(item.price * item.quantity).toLocaleString()}</Typography>
+              </Box>
+            ))}
+            <Divider sx={{ my: 2 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography color="text.secondary">Subtotal</Typography>
+              <Typography fontWeight={600}>₹{cartTotal.toLocaleString()}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography color="text.secondary">Tax (18% GST)</Typography>
+              <Typography fontWeight={600}>₹{tax.toLocaleString()}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+              <Typography color="text.secondary">Shipping</Typography>
+              <Typography fontWeight={600}>{shipping === 0 ? 'Free' : `₹${shipping.toLocaleString()}`}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h6" fontWeight={800}>Total</Typography>
+              <Typography variant="h5" fontWeight={900} color="primary.main">₹{finalTotal.toLocaleString()}</Typography>
+            </Box>
+          </Box>
+        );
+      default:
+        throw new Error('Unknown step');
+    }
+  };
+
+  if (cartItems.length === 0 && activeStep === 0) {
     return (
-      <Box sx={{ textAlign: "center", py: 16 }}>
+      <Box sx={{ pt: 10, textAlign: 'center', minHeight: '80vh' }}>
         <Typography variant="h5" sx={{ mb: 2 }}>Your cart is empty.</Typography>
-        <Button component={RouterLink} to="/shop" variant="contained">Go Shopping</Button>
+        <Button variant="contained" onClick={() => navigate('/products')}>Return to Shop</Button>
       </Box>
     );
   }
 
-  const handleShippingChange = (name, value) => setShipping((p) => ({ ...p, [name]: value }));
-  const handlePaymentChange = (name, value) => setPayment((p) => ({ ...p, [name]: value }));
-
-  const handleNext = () => {
-    if (activeStep === 0) {
-      const errs = validate(0, shipping);
-      if (Object.keys(errs).length) { setErrors(errs); return; }
-      setErrors({});
-    }
-    setActiveStep((s) => s + 1);
-  };
-
-  const handleBack = () => setActiveStep((s) => s - 1);
-
-  const handlePlaceOrder = () => {
-    setPlacing(true);
-    setTimeout(() => { clearCart(); navigate("/order-success"); }, 1800);
-  };
-
   return (
-    <Box sx={{ bgcolor: "background.default", py: { xs: 4, md: 7 } }}>
-      <Container maxWidth="lg">
-        <Typography variant="h4" sx={{ fontWeight: 800, mb: 4, textAlign: "center" }}>Secure Checkout</Typography>
-
-        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 6 }}>
-          {STEPS.map((label, i) => (
-            <Step key={label} completed={activeStep > i}>
-              <StepLabel><Typography variant="body2" sx={{ fontWeight: 600 }}>{label}</Typography></StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-
-        <Grid container spacing={4} alignItems="flex-start">
-          <Grid item xs={12} lg={8}>
-            <Card sx={{ p: { xs: 2.5, md: 4 } }}>
-              {activeStep === 0 && <StepShipping data={shipping} onChange={handleShippingChange} errors={errors} />}
-              {activeStep === 1 && <StepPayment data={payment} onChange={handlePaymentChange} />}
-              {activeStep === 2 && <StepReview shipping={shipping} payment={payment} cartItems={cartItems} cartTotal={cartTotal} />}
-
-              <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4, gap: 2 }}>
-                <Button disabled={activeStep === 0} onClick={handleBack} startIcon={<ArrowBack />} variant="outlined" sx={{ px: 3 }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Container maxWidth="md" sx={{ py: 8, flexGrow: 1 }}>
+        <Card sx={{ p: { xs: 3, md: 6 }, borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+          <Typography component="h1" variant="h4" align="center" sx={{ fontWeight: 800, mb: 4 }}>
+            Checkout
+          </Typography>
+          
+          <Stepper activeStep={activeStep} sx={{ mb: 6 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          
+          <React.Fragment>
+            {renderStepContent(activeStep)}
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 6, gap: 2 }}>
+              {activeStep !== 0 && (
+                <Button onClick={handleBack} variant="outlined" sx={{ px: 4 }}>
                   Back
                 </Button>
-                {activeStep < 2 ? (
-                  <Button onClick={handleNext} endIcon={<ArrowForward />} variant="contained" sx={{ px: 4 }}>
-                    Continue
-                  </Button>
-                ) : (
-                  <Button onClick={handlePlaceOrder} variant="contained" size="large" startIcon={<Lock />}
-                    disabled={placing} sx={{ px: 5, py: 1.5, fontWeight: 800 }}>
-                    {placing ? "Placing Order…" : "Place Order"}
-                  </Button>
-                )}
-              </Box>
-            </Card>
-          </Grid>
-
-          {/* Mini summary sidebar */}
-          <Grid item xs={12} lg={4}>
-            <Card sx={{ position: { lg: "sticky" }, top: 100 }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
-                  Order Items <Chip label={cartItems.length} size="small" color="primary" sx={{ ml: 1 }} />
-                </Typography>
-                {cartItems.map((item) => (
-                  <Box key={item.id} sx={{ display: "flex", gap: 1.5, mb: 2 }}>
-                    <Box sx={{ width: 48, height: 48, borderRadius: 1.5, overflow: "hidden", flexShrink: 0, bgcolor: "grey.100" }}>
-                      <img src={item.image} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    </Box>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="caption" sx={{ fontWeight: 600, color: "text.primary", display: "block", lineHeight: 1.3 }}>{item.name}</Typography>
-                      <Typography variant="caption" sx={{ color: "text.secondary" }}>×{item.quantity} — ₹{(item.price * item.quantity).toLocaleString()}</Typography>
-                    </Box>
-                  </Box>
-                ))}
-                <Divider sx={{ my: 2 }} />
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>Total</Typography>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 900, color: "primary.main" }}>
-                    ₹{(cartTotal + Math.round(cartTotal * 0.18) + (cartTotal > 10000 ? 0 : 299)).toLocaleString()}
-                  </Typography>
-                </Box>
-                <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1, color: "success.main" }}>
-                  <Lock fontSize="small" />
-                  <Typography variant="caption" sx={{ fontWeight: 600 }}>Secured by 256-bit SSL</Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+              )}
+              <Button
+                variant="contained"
+                onClick={handleNext}
+                disabled={placingOrder}
+                sx={{ px: 4 }}
+              >
+                {placingOrder ? 'Processing...' : activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+              </Button>
+            </Box>
+          </React.Fragment>
+        </Card>
       </Container>
+      <Footer />
     </Box>
   );
 }

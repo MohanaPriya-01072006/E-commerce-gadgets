@@ -12,6 +12,8 @@ import FAQ from "../Pages/FAQ";
 import Login from "../Pages/Login";
 import Signup from "../Pages/Signup";
 import Enquiry from "../Pages/enquiry";
+import MyOrders from "../Pages/MyOrders";
+import AdminLayout from "../Pages/Admin/AdminLayout";
 
 export default function AppRoutes() {
   return (
@@ -38,6 +40,13 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/enquiry" element={<Enquiry />} />
+
+      {/* User */}
+      <Route path="/my-orders" element={<MyOrders />} />
+
+      {/* Admin Panel */}
+      <Route path="/admin/*" element={<AdminLayout />} />
+
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

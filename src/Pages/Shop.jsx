@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Box, Container, Grid, Typography, Button, Card,
   Checkbox, FormControlLabel, FormGroup, Divider, Slider,
   MenuItem, Select, InputLabel, FormControl, Chip, IconButton,
-  Drawer, useMediaQuery, useTheme, Badge, Collapse,
+  Drawer, useMediaQuery, useTheme, Badge, Collapse, CircularProgress
 } from "@mui/material";
 import { FilterList, Close, ExpandMore, ExpandLess, GridView, ViewList } from "@mui/icons-material";
-import { products } from "../Data/products";
+import api from "../Services/api";
 import ProductCard from "../Components/ProductCard";
 
 const CATEGORIES = ["Smartphones", "Laptops", "Wearables", "Audio", "Tablets", "Cameras", "Gaming"];
@@ -117,6 +117,22 @@ export default function Shop() {
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
   const [sort, setSort] = useState("default");
   const [gridCols, setGridCols] = useState(3);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await api.get('/products');
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const toggleCategory = (cat) => setSelectedCategories((p) => p.includes(cat) ? p.filter((c) => c !== cat) : [...p, cat]);
   const toggleBrand = (b) => setSelectedBrands((p) => p.includes(b) ? p.filter((x) => x !== b) : [...p, b]);
@@ -174,6 +190,11 @@ export default function Shop() {
         </Container>
       </Box>
 
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
       <Container maxWidth="lg">
         {/* Active filter chips */}
         {(selectedCategories.length > 0 || selectedBrands.length > 0) && (
@@ -247,6 +268,7 @@ export default function Shop() {
           </Grid>
         </Grid>
       </Container>
+      )}
 
       {/* Mobile Filter Drawer */}
       <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}

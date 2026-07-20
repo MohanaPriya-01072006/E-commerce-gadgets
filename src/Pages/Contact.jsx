@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import {
   Box, Container, Grid, Typography, Card, CardContent,
-  TextField, Button, Divider,
+  TextField, Button, Divider, Alert,
 } from "@mui/material";
 import {
   LocationOn, Phone, Email, AccessTime, Send, CheckCircle,
 } from "@mui/icons-material";
+import api from "../Services/api";
 
 const contactCards = [
   { icon: <LocationOn sx={{ fontSize: 28 }} />, title: "Visit Us", lines: ["MopriX Headquarters", "MG Road, Indiranagar", "Bangalore, Karnataka 560001"] },
@@ -32,20 +33,36 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [apiError, setApiError] = useState("");
 
-  const handleChange = (field) => (e) => setForm((p) => ({ ...p, [field]: e.target.value }));
+  const handleChange = (field) => (e) => {
+    setForm((p) => ({ ...p, [field]: e.target.value }));
+    if (errors[field]) setErrors((p) => ({ ...p, [field]: "" }));
+    if (apiError) setApiError("");
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate(form);
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
+    setApiError("");
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      await api.post("/enquiries", {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        subject: form.subject,
+        message: form.message.trim(),
+      });
       setSuccess(true);
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
-    }, 1600);
+    } catch (err) {
+      setApiError(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const fieldSx = { "& .MuiOutlinedInput-root": { borderRadius: 2 } };
@@ -112,6 +129,11 @@ export default function Contact() {
                 <Card component="form" onSubmit={handleSubmit} noValidate>
                   <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
                     <Grid container spacing={2.5}>
+                      {apiError && (
+                        <Grid item xs={12}>
+                          <Alert severity="error" sx={{ borderRadius: 2 }}>{apiError}</Alert>
+                        </Grid>
+                      )}
                       <Grid item xs={12} sm={6}>
                         <TextField label="Full Name" fullWidth required value={form.name} onChange={handleChange("name")} error={!!errors.name} helperText={errors.name} sx={fieldSx} />
                       </Grid>
