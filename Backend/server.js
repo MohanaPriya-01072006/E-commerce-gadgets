@@ -7,24 +7,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, Postman)
-    // and any localhost port during development
-    const allowed = [
-      process.env.FRONTEND_URL,
-      'http://localhost:3000',
-      'http://localhost:3001',
-    ].filter(Boolean);
-
-    if (!origin || allowed.includes(origin)) {
-      callback(null, true);
-    } else {
-      // In production allow the deployed frontend domain
-      callback(null, true); // loosen for now; tighten once domain is known
-    }
-  },
-  credentials: true,
+  origin: true,
+  credentials: true
 }));
+
 app.use(express.json());
 
 // Routes
@@ -32,10 +18,17 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/enquiries', require('./routes/enquiryRoutes'));
+app.use('/api/applications', require('./routes/applicationRoutes'));
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date(), db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
+  res.json({
+    status: 'OK',
+    timestamp: new Date(),
+    db: mongoose.connection.readyState === 1
+      ? 'connected'
+      : 'disconnected'
+  });
 });
 
 // Connect to MongoDB then start server

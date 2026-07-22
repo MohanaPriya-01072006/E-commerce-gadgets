@@ -1,196 +1,201 @@
-import React from "react";
-import {
-  Box, Container, Grid, Typography, Card, Avatar, Divider,
-} from "@mui/material";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Target, Award, Zap, Heart, Globe, Shield, ArrowRight } from 'lucide-react';
+
+const glassCard = {
+  background: 'rgba(255,255,255,0.88)',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255,255,255,0.7)',
+  boxShadow: '0 4px 24px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)',
+  borderRadius: '1rem',
+};
 
 const stats = [
-  { value: "50K+", label: "Happy Customers" },
-  { value: "5K+", label: "Products Listed" },
-  { value: "120+", label: "Brand Partners" },
-  { value: "4.9★", label: "Average Rating" },
+  { value: '50K+', label: 'Happy Customers' },
+  { value: '5K+',  label: 'Products' },
+  { value: '120+', label: 'Brand Partners' },
+  { value: '4.9★', label: 'Avg Rating' },
 ];
 
 const values = [
-  { icon: "🎯", title: "Customer First", desc: "Every decision we make starts with one question: what's best for our customer? From UX to delivery, your experience drives us." },
-  { icon: "✅", title: "100% Genuine", desc: "We source directly from authorised distributors. Every product comes with the manufacturer's original warranty — no grey-market goods." },
-  { icon: "🚀", title: "Speed & Reliability", desc: "Same-day dispatch in metro cities. Real-time tracking so you always know exactly where your order is." },
-  { icon: "💬", title: "Always Available", desc: "Our support team works round the clock — 365 days a year — via chat, phone, and email. No bots, just humans." },
-  { icon: "🌱", title: "Sustainable Packaging", desc: "We use 100% recyclable packaging and are committed to becoming carbon-neutral by 2027." },
-  { icon: "🔒", title: "Secure & Private", desc: "Bank-grade SSL encryption on every transaction. We never sell your data. Ever." },
+  { icon: Target, title: 'Customer First',    desc: 'Every decision starts with your experience. From UX to delivery, you drive us.',                        color: '#2563eb' },
+  { icon: Shield, title: '100% Genuine',      desc: 'Sourced directly from authorised distributors. Every product has original manufacturer warranty.',          color: '#22c55e' },
+  { icon: Zap,    title: 'Speed & Reliability', desc: 'Same-day dispatch in metros. Real-time tracking on every order.',                                         color: '#f59e0b' },
+  { icon: Heart,  title: 'Always Available',  desc: 'Round-the-clock support — 365 days a year. No bots, just humans.',                                          color: '#ec4899' },
+  { icon: Globe,  title: 'Sustainable',       desc: '100% recyclable packaging and committed to carbon-neutral by 2027.',                                        color: '#06b6d4' },
+  { icon: Award,  title: 'Award Winning',     desc: "Voted India's best gadget store 3 years running.",                                                          color: '#8b5cf6' },
 ];
 
 const team = [
-  { name: "Rahul Menon", role: "Founder & CEO", avatar: "RM", bio: "Ex-Amazon product lead. 12 years in e-commerce and logistics." },
-  { name: "Divya Kapoor", role: "CTO", avatar: "DK", bio: "Full-stack engineer turned tech founder. Obsessed with performance." },
-  { name: "Sameer Joshi", role: "Head of Sourcing", avatar: "SJ", bio: "Former Samsung India partnerships manager. Knows every brand inside out." },
-  { name: "Ananya Nair", role: "Head of Customer Success", avatar: "AN", bio: "Built MopriX's legendary support culture from the ground up." },
+  { name: 'Rahul Menon',   role: 'Founder & CEO',     bio: 'Ex-Amazon product lead. 12 years in e-commerce.',          avatar: 'RM' },
+  { name: 'Divya Kapoor',  role: 'CTO',               bio: 'Full-stack engineer turned tech founder.',                  avatar: 'DK' },
+  { name: 'Sameer Joshi',  role: 'Head of Sourcing',  bio: 'Former Samsung India partnerships manager.',                avatar: 'SJ' },
+  { name: 'Ananya Nair',   role: 'Head of Support',   bio: "Built Moprix's legendary support culture.",                 avatar: 'AN' },
 ];
 
 const timeline = [
-  { year: "2022", event: "MopriX founded in Bangalore with just 12 products and a big dream." },
-  { year: "2023", event: "Crossed ₹10 Cr in revenue. Launched express same-day delivery in 8 cities." },
-  { year: "2024", event: "Onboarded 100+ brand partners. Reached 25,000 happy customers." },
-  { year: "2025", event: "Launched the MopriX mobile app. Expanded to 50+ cities across India." },
-  { year: "2026", event: "50,000+ customers, 5,000+ products, and still growing." },
+  { year: '2022', event: 'Moprix founded in Bangalore with 12 products and a big dream.' },
+  { year: '2023', event: 'Crossed ₹10 Cr revenue. Launched same-day delivery in 8 cities.' },
+  { year: '2024', event: '100+ brand partners. 25,000 happy customers.' },
+  { year: '2025', event: 'Mobile app launched. Expanded to 50+ cities.' },
+  { year: '2026', event: '50K+ customers, 5K+ products, still growing.' },
 ];
 
 export default function About() {
   return (
-    <Box>
+    <div className="bg-white">
+
       {/* Hero */}
-      <Box sx={{
-        background: "linear-gradient(135deg,#0f172a 0%,#1e3a5f 55%,#312e81 100%)",
-        py: { xs: 10, md: 16 }, textAlign: "center", position: "relative", overflow: "hidden",
-      }}>
-        <Box sx={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 60% 40%, rgba(37,99,235,0.18) 0%, transparent 55%)" }} />
-        <Container maxWidth="md" sx={{ position: "relative", zIndex: 1 }}>
-          <Typography variant="overline" sx={{ color: "primary.light", fontWeight: 700, letterSpacing: 2, display: "block", mb: 2 }}>
+      <section className="py-24 px-4 text-center relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0e7490 100%)' }}>
+        {/* Glass spheres */}
+        <div className="absolute top-10 left-10 w-20 h-20 rounded-full hidden lg:block opacity-40"
+          style={{ background: 'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.5), rgba(37,99,235,0.1))', boxShadow: 'inset 2px 3px 8px rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.25)' }} />
+        <div className="absolute bottom-10 right-16 w-28 h-28 rounded-full hidden lg:block opacity-30"
+          style={{ background: 'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.4), rgba(6,182,212,0.1))', boxShadow: 'inset 2px 3px 8px rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.2)' }} />
+        <div className="container-custom relative z-10 max-w-3xl">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-blue-200 uppercase tracking-widest mb-4"
+            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
             Our Story
-          </Typography>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "#f8fafc", mb: 3, fontSize: { xs: "2.2rem", md: "3.5rem" } }}>
-            We're on a mission to make <Box component="span" sx={{ background: "linear-gradient(90deg,#60a5fa,#a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>premium tech</Box> accessible to all.
-          </Typography>
-          <Typography variant="h6" sx={{ color: "#94a3b8", fontWeight: 400, maxWidth: 600, mx: "auto", lineHeight: 1.7 }}>
-            Founded in Bangalore in 2022, MopriX was born from a simple frustration: why is buying genuine, top-quality tech in India so hard? We set out to fix that.
-          </Typography>
-        </Container>
-      </Box>
+          </span>
+          <h1 className="font-display font-black text-5xl sm:text-6xl text-white leading-tight mb-5">
+            We're on a mission to make{' '}
+            <span style={{ background: 'linear-gradient(90deg, #93c5fd, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              premium tech
+            </span>
+            {' '}accessible to all.
+          </h1>
+          <p className="text-slate-300 text-lg leading-relaxed">
+            Founded in Bangalore in 2022, Moprix was born from a frustration — why is buying genuine, top-quality tech in India so hard? We set out to fix that.
+          </p>
+        </div>
+      </section>
 
       {/* Stats */}
-      <Box sx={{ bgcolor: "background.paper", py: 8, borderBottom: "1px solid", borderColor: "divider" }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={4} justifyContent="center">
-            {stats.map((s) => (
-              <Grid item xs={6} md={3} key={s.label} sx={{ textAlign: "center" }}>
-                <Typography variant="h3" sx={{ fontWeight: 900, color: "primary.main", mb: 0.5 }}>{s.value}</Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 600 }}>{s.label}</Typography>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+      <section className="py-12 px-4 bg-white border-b border-slate-100">
+        <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {stats.map(s => (
+            <div key={s.label}>
+              <p className="font-black text-4xl text-primary mb-1">{s.value}</p>
+              <p className="text-secondary-500 text-sm font-medium">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Our Story */}
-      <Box sx={{ bgcolor: "background.default", py: 10 }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={8} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="overline" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.5, display: "block", mb: 1 }}>Who We Are</Typography>
-              <Typography variant="h3" sx={{ fontWeight: 800, color: "text.primary", mb: 3 }}>Built by tech lovers, for tech lovers.</Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.8, mb: 2 }}>
-                MopriX started when three friends — frustrated by counterfeit products, terrible delivery, and zero after-sales support — decided to build the store they always wished existed.
-              </Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.8, mb: 2 }}>
-                Today we curate thousands of products across smartphones, laptops, audio, and wearables. Every single item is sourced directly from the brand or their authorised distributor — we never compromise on authenticity.
-              </Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.8 }}>
-                We believe technology should empower your life, not frustrate it. That's why we obsess over every detail — from packaging to post-sale support — so you can shop with complete confidence.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ bgcolor: "background.paper", borderRadius: 4, overflow: "hidden", border: "1px solid", borderColor: "divider", boxShadow: "0 20px 60px rgba(0,0,0,0.07)" }}>
-                <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
-                  alt="MopriX Team"
-                  style={{ width: "100%", height: 380, objectFit: "cover", display: "block" }}
-                />
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+      {/* Story */}
+      <section className="section" style={{ background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 50%, #f8faff 100%)' }}>
+        <div className="container-custom grid lg:grid-cols-2 gap-14 items-center">
+          <div>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-3">Who We Are</span>
+            <h2 className="section-title mb-5">Built by tech lovers,<br />for tech lovers.</h2>
+            {[
+              'Moprix started when three friends — frustrated by counterfeit products, terrible delivery, and zero after-sales support — decided to build the store they always wished existed.',
+              'Today we curate thousands of products across smartphones, laptops, audio, and wearables. Every single item is sourced directly from the brand or their authorised distributor.',
+              "We believe technology should empower your life, not frustrate it. That's why we obsess over every detail — from packaging to post-sale support.",
+            ].map((t, i) => (
+              <p key={i} className="text-secondary-600 leading-relaxed mb-3 text-sm">{t}</p>
+            ))}
+          </div>
+          <div className="rounded-3xl overflow-hidden"
+            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.10)' }}>
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Team"
+              className="w-full h-80 object-cover" />
+          </div>
+        </div>
+      </section>
 
       {/* Timeline */}
-      <Box sx={{ bgcolor: "background.paper", py: 10, borderTop: "1px solid", borderBottom: "1px solid", borderColor: "divider" }}>
-        <Container maxWidth="md">
-          <Box sx={{ textAlign: "center", mb: 7 }}>
-            <Typography variant="overline" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.5, display: "block", mb: 1 }}>Our Journey</Typography>
-            <Typography variant="h3" sx={{ fontWeight: 800, color: "text.primary" }}>From Idea to India's Favourite Gadget Store</Typography>
-          </Box>
-          <Box sx={{ position: "relative", "&::before": { content: '""', position: "absolute", left: { xs: 16, md: "50%" }, top: 0, bottom: 0, width: 2, bgcolor: "divider", transform: { md: "translateX(-50%)" } } }}>
-            {timeline.map((item, idx) => (
-              <Box key={item.year} sx={{ display: "flex", flexDirection: { xs: "row", md: idx % 2 === 0 ? "row" : "row-reverse" }, gap: 3, mb: 5, position: "relative" }}>
-                <Box sx={{ display: { xs: "none", md: "flex" }, flex: 1, justifyContent: idx % 2 === 0 ? "flex-end" : "flex-start", alignItems: "flex-start", pt: 0.5 }}>
-                  {idx % 2 === 0 && (
-                    <Card sx={{ maxWidth: 320, p: 2.5 }}>
-                      <Typography variant="subtitle2" sx={{ color: "primary.main", fontWeight: 800, mb: 1 }}>{item.year}</Typography>
-                      <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.6 }}>{item.event}</Typography>
-                    </Card>
-                  )}
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "center", width: { xs: 40, md: 48 }, flexShrink: 0, position: "relative", zIndex: 1 }}>
-                  <Box sx={{ width: 44, height: 44, borderRadius: "50%", bgcolor: "primary.main", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, flexShrink: 0, boxShadow: "0 0 0 4px #fff, 0 0 0 6px", boxShadowColor: "primary.light" }}>
-                    {item.year.slice(2)}
-                  </Box>
-                </Box>
-                <Box sx={{ flex: 1, pt: 0.5 }}>
-                  <Card sx={{ maxWidth: 320, p: 2.5, display: { xs: "block", md: idx % 2 === 1 ? "block" : "none" } }}>
-                    <Typography variant="subtitle2" sx={{ color: "primary.main", fontWeight: 800, mb: 1 }}>{item.year}</Typography>
-                    <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.6 }}>{item.event}</Typography>
-                  </Card>
-                </Box>
-              </Box>
+      <section className="section bg-white">
+        <div className="container-custom max-w-3xl">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">Our Journey</span>
+            <h2 className="section-title">From Idea to India's Favourite</h2>
+          </div>
+          <div className="relative">
+            <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-100" />
+            {timeline.map(t => (
+              <div key={t.year} className="relative flex gap-5 mb-6 pl-14">
+                <div className="absolute left-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-xs"
+                  style={{ background: 'linear-gradient(135deg, #2563eb, #06b6d4)', boxShadow: '0 4px 12px rgba(37,99,235,0.3)' }}>
+                  {t.year.slice(2)}
+                </div>
+                <div className="p-4 flex-1 rounded-xl" style={glassCard}>
+                  <p className="text-xs font-bold text-primary mb-1">{t.year}</p>
+                  <p className="text-sm text-secondary-700">{t.event}</p>
+                </div>
+              </div>
             ))}
-          </Box>
-        </Container>
-      </Box>
+          </div>
+        </div>
+      </section>
 
-      {/* Core Values */}
-      <Box sx={{ bgcolor: "background.default", py: 10 }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 7 }}>
-            <Typography variant="overline" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.5, display: "block", mb: 1 }}>What Drives Us</Typography>
-            <Typography variant="h3" sx={{ fontWeight: 800, color: "text.primary" }}>Our Core Values</Typography>
-          </Box>
-          <Grid container spacing={3}>
-            {values.map((v) => (
-              <Grid item xs={12} sm={6} md={4} key={v.title}>
-                <Card sx={{ p: 3.5, height: "100%", transition: "box-shadow 0.3s, transform 0.3s", "&:hover": { boxShadow: "0 16px 48px rgba(37,99,235,0.1)", transform: "translateY(-4px)" } }}>
-                  <Typography sx={{ fontSize: 36, mb: 2 }}>{v.icon}</Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>{v.title}</Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.7 }}>{v.desc}</Typography>
-                </Card>
-              </Grid>
+      {/* Values */}
+      <section className="section" style={{ background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 50%, #f8faff 100%)' }}>
+        <div className="container-custom">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">What Drives Us</span>
+            <h2 className="section-title">Our Core Values</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {values.map(({ icon: Icon, title, desc, color }) => (
+              <div key={title}
+                className="p-6 rounded-2xl transition-all duration-300 cursor-default"
+                style={glassCard}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 16px 48px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = glassCard.boxShadow; }}>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4"
+                  style={{ background: `${color}15` }}>
+                  <Icon size={22} style={{ color }} />
+                </div>
+                <h3 className="font-bold text-secondary-900 mb-2">{title}</h3>
+                <p className="text-sm text-secondary-500 leading-relaxed">{desc}</p>
+              </div>
             ))}
-          </Grid>
-        </Container>
-      </Box>
+          </div>
+        </div>
+      </section>
 
       {/* Team */}
-      <Box sx={{ bgcolor: "background.paper", py: 10, borderTop: "1px solid", borderColor: "divider" }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 7 }}>
-            <Typography variant="overline" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.5, display: "block", mb: 1 }}>The People</Typography>
-            <Typography variant="h3" sx={{ fontWeight: 800, color: "text.primary" }}>Meet Our Team</Typography>
-          </Box>
-          <Grid container spacing={4} justifyContent="center">
-            {team.map((member) => (
-              <Grid item xs={12} sm={6} md={3} key={member.name}>
-                <Card sx={{ p: 3.5, textAlign: "center", height: "100%", transition: "box-shadow 0.3s", "&:hover": { boxShadow: "0 16px 48px rgba(0,0,0,0.09)" } }}>
-                  <Avatar sx={{ width: 72, height: 72, mx: "auto", mb: 2.5, background: "linear-gradient(135deg,#2563eb,#7c3aed)", fontSize: 22, fontWeight: 800 }}>
-                    {member.avatar}
-                  </Avatar>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: "text.primary" }}>{member.name}</Typography>
-                  <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 600, display: "block", mb: 1.5 }}>{member.role}</Typography>
-                  <Divider sx={{ mb: 1.5 }} />
-                  <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.6 }}>{member.bio}</Typography>
-                </Card>
-              </Grid>
+      <section className="section bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">The People</span>
+            <h2 className="section-title">Meet Our Team</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {team.map(m => (
+              <div key={m.name}
+                className="p-6 text-center rounded-2xl transition-all duration-300 cursor-default"
+                style={glassCard}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.08), inset 0 1px 0 rgba(255,255,255,0.9)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = glassCard.boxShadow; }}>
+                <div className="w-16 h-16 rounded-full flex items-center justify-center text-white font-black text-xl mx-auto mb-4"
+                  style={{ background: 'linear-gradient(135deg, #2563eb, #06b6d4)', boxShadow: '0 8px 24px rgba(37,99,235,0.25)' }}>
+                  {m.avatar}
+                </div>
+                <p className="font-bold text-secondary-900">{m.name}</p>
+                <p className="text-xs text-primary font-semibold mb-2">{m.role}</p>
+                <p className="text-xs text-secondary-500">{m.bio}</p>
+              </div>
             ))}
-          </Grid>
-        </Container>
-      </Box>
+          </div>
+        </div>
+      </section>
 
       {/* CTA */}
-      <Box sx={{ background: "linear-gradient(135deg,#1e3a5f,#2563eb)", py: 10, textAlign: "center" }}>
-        <Container maxWidth="sm">
-          <Typography variant="h3" sx={{ fontWeight: 900, color: "#fff", mb: 2 }}>Ready to explore our collection?</Typography>
-          <Typography variant="body1" sx={{ color: "#93c5fd", mb: 4 }}>Thousands of genuine products. Delivered fast. Backed by the best support in India.</Typography>
-          <Box component="a" href="/shop" sx={{ display: "inline-block", px: 5, py: 1.75, borderRadius: 2.5, bgcolor: "#fff", color: "primary.main", fontWeight: 800, fontSize: "1.05rem", textDecoration: "none", boxShadow: "0 8px 30px rgba(0,0,0,0.2)", transition: "opacity 0.2s", "&:hover": { opacity: 0.9 } }}>
-            Shop Now →
-          </Box>
-        </Container>
-      </Box>
-    </Box>
+      <section className="py-20 px-4 text-center"
+        style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0e7490 100%)' }}>
+        <div className="container-custom max-w-xl">
+          <h2 className="font-display font-black text-4xl text-white mb-4">Ready to explore?</h2>
+          <p className="text-slate-300 mb-8">Thousands of genuine products. Delivered fast. Backed by the best support in India.</p>
+          <Link to="/shop"
+            className="btn btn-lg text-white gap-2"
+            style={{ background: 'linear-gradient(135deg, #2563eb, #06b6d4)', boxShadow: '0 8px 24px rgba(37,99,235,0.4)' }}>
+            Shop Now <ArrowRight size={18} />
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }
