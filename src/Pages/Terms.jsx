@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, ShoppingBag, CreditCard, Truck, AlertCircle, Shield, Scale, ChevronDown, Mail, Phone } from 'lucide-react';
 
-const glassCard = {
-  background: 'rgba(255,255,255,0.88)',
-  backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255,255,255,0.7)',
-  boxShadow: '0 4px 24px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)',
-};
+
 
 const sections = [
   {
@@ -101,8 +96,7 @@ function Section({ section }) {
   const [open, setOpen] = useState(true);
   const { icon: Icon, color, title, content, id } = section;
   return (
-    <div className="rounded-2xl overflow-hidden mb-4 transition-all duration-300"
-      style={glassCard}>
+    <div className="rounded-2xl overflow-hidden mb-4 transition-all duration-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
       <button
         className="w-full flex items-center gap-4 p-6 text-left"
         onClick={() => setOpen(v => !v)}>
@@ -112,7 +106,7 @@ function Section({ section }) {
         </div>
         <div className="flex-1">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Section {id}</span>
-          <h2 className="font-display font-bold text-lg text-secondary-900 leading-tight">{title}</h2>
+          <h2 className="font-display font-bold text-lg text-secondary-900 dark:text-white leading-tight">{title}</h2>
         </div>
         <ChevronDown size={20} className="text-slate-400 flex-shrink-0 transition-transform duration-300"
           style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
@@ -121,7 +115,7 @@ function Section({ section }) {
         <div className="px-6 pb-6 space-y-4" style={{ borderTop: '1px solid rgba(226,232,240,0.5)' }}>
           {content.map((item, i) => (
             <div key={i} className="pt-4">
-              <h3 className="font-semibold text-secondary-900 mb-1.5">{item.subtitle}</h3>
+              <h3 className="font-semibold text-secondary-900 dark:text-white mb-1.5">{item.subtitle}</h3>
               <p className="text-sm text-secondary-600 leading-relaxed">{item.text}</p>
             </div>
           ))}
@@ -133,7 +127,7 @@ function Section({ section }) {
 
 export default function Terms() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Hero */}
       <section className="py-16 px-4 text-center relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0e7490 100%)' }}>
@@ -168,9 +162,7 @@ export default function Terms() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="py-12 px-4 sm:px-6"
-        style={{ background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 50%, #f8faff 100%)' }}>
+      <div className="py-12 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900">
         <div className="container-custom max-w-4xl">
 
           {/* Acceptance notice */}

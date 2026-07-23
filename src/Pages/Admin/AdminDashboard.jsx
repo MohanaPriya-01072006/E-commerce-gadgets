@@ -97,7 +97,7 @@ export default function AdminDashboard() {
               { day: 'Sat', revenue: 35000 },
               { day: 'Sun', revenue: 29000 },
             ].map(data => (
-              <Box key={data.day} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+              <Box key={data.day} sx={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}>
                 <Box sx={{ 
                   width: '100%', 
                   background: 'linear-gradient(180deg, #3b82f6 0%, #93c5fd 100%)',
