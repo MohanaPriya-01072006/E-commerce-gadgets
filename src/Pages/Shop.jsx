@@ -28,9 +28,11 @@ function RangeSlider({ min, max, value, onChange }) {
 function FilterSection({ title, children, defaultOpen = true }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-secondary-100 dark:border-secondary-700 pb-4 mb-4">
-      <button onClick={() => setOpen(v => !v)} className="w-full flex items-center justify-between py-1 font-semibold text-sm text-secondary-900 dark:text-white">
-        {title} <ChevronDown size={16} className={`text-secondary-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+    <div style={{ borderBottom: '1px solid rgba(226,232,240,0.7)' }} className="pb-4 mb-4">
+      <button onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between py-1 font-semibold text-sm text-secondary-900">
+        {title}
+        <ChevronDown size={16} className={`text-secondary-400 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && <div className="mt-3">{children}</div>}
     </div>
@@ -86,21 +88,41 @@ export default function Shop() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
+  // Glass sidebar style
+  const sidebarStyle = {
+    background: 'rgba(255,255,255,0.88)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
+    border: '1px solid rgba(255,255,255,0.75)',
+    boxShadow: '0 4px 24px rgba(37,99,235,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
+    borderRadius: '1rem',
+  };
+
   const FiltersPanel = () => (
     <div className="space-y-0">
       <div className="flex items-center justify-between mb-4">
-        <span className="font-bold text-secondary-900 dark:text-white">Filters {activeFilterCount > 0 && <span className="badge badge-primary ml-1">{activeFilterCount}</span>}</span>
-        {activeFilterCount > 0 && <button onClick={clearAll} className="text-xs text-danger font-semibold hover:underline">Clear All</button>}
+        <span className="font-bold text-secondary-900" style={{ fontSize: 15 }}>
+          Filters {activeFilterCount > 0 && (
+            <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full text-white text-[10px] font-black"
+              style={{ background: 'linear-gradient(135deg,#2563eb,#06b6d4)' }}>
+              {activeFilterCount}
+            </span>
+          )}
+        </span>
+        {activeFilterCount > 0 && (
+          <button onClick={clearAll} className="text-xs font-bold" style={{ color: '#ef4444' }}>Clear All</button>
+        )}
       </div>
 
       <FilterSection title="Category">
         {categories.map(c => (
           <label key={c.id} className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-            <input type="checkbox" checked={selectedCats.includes(c.slug)} onChange={() => toggleCat(c.slug)} className="w-4 h-4 rounded accent-primary" />
-            <span className="text-sm text-secondary-700 dark:text-secondary-300 group-hover:text-primary transition-colors flex items-center gap-1.5">
+            <input type="checkbox" checked={selectedCats.includes(c.slug)} onChange={() => toggleCat(c.slug)}
+              className="w-4 h-4 rounded accent-primary" />
+            <span className="text-sm font-medium text-secondary-800 group-hover:text-primary transition-colors flex items-center gap-1.5">
               <span>{c.icon}</span>{c.name}
             </span>
-            <span className="ml-auto text-xs text-secondary-400">{c.count}</span>
+            <span className="ml-auto text-xs font-semibold text-secondary-400">{c.count}</span>
           </label>
         ))}
       </FilterSection>
@@ -108,8 +130,9 @@ export default function Shop() {
       <FilterSection title="Brand">
         {BRANDS.map(b => (
           <label key={b} className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-            <input type="checkbox" checked={selectedBrands.includes(b)} onChange={() => toggleBrand(b)} className="w-4 h-4 rounded accent-primary" />
-            <span className="text-sm text-secondary-700 dark:text-secondary-300 group-hover:text-primary transition-colors">{b}</span>
+            <input type="checkbox" checked={selectedBrands.includes(b)} onChange={() => toggleBrand(b)}
+              className="w-4 h-4 rounded accent-primary" />
+            <span className="text-sm font-medium text-secondary-800 group-hover:text-primary transition-colors">{b}</span>
           </label>
         ))}
       </FilterSection>
@@ -124,7 +147,7 @@ export default function Shop() {
             <input type="radio" name="rating" checked={minRating === r} onChange={() => setMinRating(r)} className="accent-primary" />
             <span className="flex items-center gap-1 text-sm">
               {[...Array(5)].map((_, i) => <Star key={i} size={12} className={i < Math.floor(r) ? 'text-warning fill-warning' : 'text-secondary-300'} />)}
-              <span className="text-secondary-500 dark:text-secondary-400 text-xs">& above</span>
+              <span className="text-secondary-500 text-xs">& above</span>
             </span>
           </label>
         ))}
@@ -134,22 +157,24 @@ export default function Shop() {
       <FilterSection title="Availability" defaultOpen={false}>
         <label className="flex items-center gap-2.5 cursor-pointer">
           <input type="checkbox" checked={inStockOnly} onChange={e => setInStockOnly(e.target.checked)} className="w-4 h-4 rounded accent-primary" />
-          <span className="text-sm text-secondary-700 dark:text-secondary-300">In Stock Only</span>
+          <span className="text-sm font-medium text-secondary-800">In Stock Only</span>
         </label>
       </FilterSection>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900">
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       {/* Page Header */}
-      <div className="bg-white dark:bg-secondary-900 border-b border-secondary-100 dark:border-secondary-800 py-8 px-4">
+      <div className="border-b py-8 px-4"
+        style={{ background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(16px)', borderColor: 'rgba(226,232,240,0.5)' }}>
         <div className="container-custom">
           <nav className="flex items-center gap-2 text-xs text-secondary-400 mb-3">
-            <Link to="/" className="hover:text-primary">Home</Link><span>/</span><span className="text-secondary-600 dark:text-secondary-300 font-medium">Shop</span>
+            <Link to="/" className="hover:text-primary">Home</Link><span>/</span>
+            <span className="text-secondary-700 font-medium">Shop</span>
           </nav>
           <h1 className="section-title mb-1">All Products</h1>
-          <p className="text-sm text-secondary-500 dark:text-secondary-400">{filtered.length} products found</p>
+          <p className="text-sm text-secondary-600">{filtered.length} products found</p>
         </div>
       </div>
 
@@ -157,7 +182,9 @@ export default function Shop() {
         <div className="flex gap-6">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="card p-5 sticky top-24"><FiltersPanel /></div>
+            <div className="p-5 sticky top-24" style={sidebarStyle}>
+              <FiltersPanel />
+            </div>
           </aside>
 
           {/* Main Content */}
@@ -200,10 +227,11 @@ export default function Shop() {
 
             {/* Products grid */}
             {paginated.length === 0 ? (
-              <div className="card py-20 text-center">
+              <div className="py-20 text-center rounded-2xl"
+                style={{ background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.7)' }}>
                 <div className="text-5xl mb-4">🔍</div>
-                <h3 className="font-bold text-xl text-secondary-900 dark:text-white mb-2">No products found</h3>
-                <p className="text-secondary-500 mb-5">Try adjusting your filters or search query.</p>
+                <h3 className="font-bold text-xl text-secondary-900 mb-2">No products found</h3>
+                <p className="text-secondary-600 mb-5">Try adjusting your filters or search query.</p>
                 <button onClick={clearAll} className="btn btn-primary">Clear Filters</button>
               </div>
             ) : (
@@ -248,13 +276,16 @@ export default function Shop() {
 
       {/* Mobile Filter Drawer */}
       {drawerOpen && <div onClick={() => setDrawerOpen(false)} className="fixed inset-0 bg-black/50 z-40 lg:hidden" />}
-      <aside className={`fixed inset-y-0 left-0 w-80 max-w-[90vw] bg-white dark:bg-secondary-900 z-50 shadow-glass p-6 overflow-y-auto transform transition-transform duration-300 lg:hidden ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 w-80 max-w-[90vw] z-50 p-6 overflow-y-auto transform transition-transform duration-300 lg:hidden ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(32px)', boxShadow: '4px 0 24px rgba(0,0,0,0.1)' }}>
         <div className="flex items-center justify-between mb-5">
-          <span className="font-bold text-lg text-secondary-900 dark:text-white">Filters</span>
+          <span className="font-bold text-lg text-secondary-900">Filters</span>
           <button onClick={() => setDrawerOpen(false)} className="btn-icon text-secondary-500"><X size={20} /></button>
         </div>
         <FiltersPanel />
-        <button onClick={() => setDrawerOpen(false)} className="btn btn-primary w-full mt-4">Show {filtered.length} Results</button>
+        <button onClick={() => setDrawerOpen(false)} className="btn btn-primary w-full mt-4">
+          Show {filtered.length} Results
+        </button>
       </aside>
     </div>
   );

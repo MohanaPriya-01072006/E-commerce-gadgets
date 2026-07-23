@@ -1,18 +1,5 @@
 const mongoose = require('mongoose');
 
-const orderItemSchema = new mongoose.Schema(
-  {
-    name:     { type: String, required: true },
-    quantity: { type: Number, required: true },
-    image:    { type: String, required: true },
-    price:    { type: Number, required: true },
-    // product stored as a plain string — works with both MongoDB ObjectIds
-    // and local numeric seed IDs (e.g. 7). No ObjectId casting, not required.
-    product:  { type: String, default: '' },
-  },
-  { _id: false }   // don't auto-generate _id for subdocuments
-);
-
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -20,7 +7,17 @@ const orderSchema = new mongoose.Schema(
       required: true,
       ref: 'User',
     },
-    orderItems: [orderItemSchema],
+    orderItems: [
+      {
+        name:     { type: String,  required: true },
+        quantity: { type: Number,  required: true },
+        image:    { type: String,  required: true },
+        price:    { type: Number,  required: true },
+        // Optional — only populated when product exists in MongoDB.
+        // Omitted entirely for local seed products with numeric IDs.
+        product:  { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: false },
+      },
+    ],
     shippingAddress: {
       fullName:   { type: String, required: true },
       address:    { type: String, required: true },

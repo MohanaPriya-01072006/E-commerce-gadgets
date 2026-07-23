@@ -16,13 +16,21 @@ const createOrder = async (req, res) => {
 
     // Normalise each item — convert product id to a plain string so Mongoose
     // never tries to cast a numeric seed id (e.g. 7) to ObjectId.
-    const sanitisedItems = orderItems.map(item => ({
-      name:     String(item.name     || ''),
-      quantity: Number(item.quantity || 1),
-      image:    String(item.image    || ''),
-      price:    Number(item.price    || 0),
-      product:  String(item.product  ?? item._id ?? item.id ?? ''),
-    }));
+    const sanitisedItems = orderItems.map(item => {
+      const sanitised = {
+        name:     String(item.name     || ''),
+        quantity: Number(item.quantity || 1),
+        image:    String(item.image    || ''),
+        price:    Number(item.price    || 0),
+      };
+      // Only include product field if it's a valid MongoDB ObjectId
+      // to avoid BSONError cast failures on older schema versions
+      const pid = String(item.product ?? item._id ?? item.id ?? '');
+      if (pid && /^[a-f\d]{24}$/i.test(pid)) {
+        sanitised.product = pid;
+      }
+      return sanitised;
+    });
 
     const order = await Order.create({
       user:            req.user._id,
