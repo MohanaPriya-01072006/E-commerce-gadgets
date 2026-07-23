@@ -81,9 +81,7 @@ export default function Checkout() {
         quantity: item.quantity,
         image: item.image,
         price: item.price,
-        // Use MongoDB _id if available, otherwise omit product ref
-        // so the backend stores it as a plain string reference
-        product: item._id || item.productId || undefined,
+        product: String(item._id || item.id || ''),
       }));
 
       const shippingAddress = {

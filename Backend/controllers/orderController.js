@@ -10,15 +10,13 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ message: 'No order items' });
     }
 
-    // Sanitise product references — strip any value that isn't a valid ObjectId
-    // (local seed products have numeric ids which Mongoose can't cast)
-    const { Types } = require('mongoose');
+    // Sanitise product references — store as plain string to avoid ObjectId cast errors
     const sanitisedItems = orderItems.map(item => ({
       name:     item.name,
       quantity: item.quantity,
       image:    item.image,
       price:    item.price,
-      product:  Types.ObjectId.isValid(item.product) ? item.product : null,
+      product:  String(item.product || item._id || item.id || ''),
     }));
 
     const order = new Order({
