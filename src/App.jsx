@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { Sparkles } from 'lucide-react';
 import { DarkModeProvider } from './Context/DarkModeContext';
 import { AuthProvider } from './Context/AuthContext';
 import { CartProvider } from './Context/CartContext';
@@ -10,25 +11,50 @@ import Navbar from './Components/Navbar';
 import Footer from './Components/Footer';
 import AppRoutes from './Routes/AppRoutes';
 import GlassBallsBackground from './Components/GlassBallsBackground';
+import MoprixHelper from './Components/Helper/MoprixHelper';
 
 export default function App() {
+  const [helperOpen, setHelperOpen] = useState(false);
+
   return (
     <DarkModeProvider>
       <AuthProvider>
         <ProductProvider>
           <CartProvider>
             <BrowserRouter>
-              {/* Fixed animated glass balls — behind everything */}
               <GlassBallsBackground />
 
-              {/* App shell sits above the balls */}
               <div className="relative flex flex-col min-h-screen" style={{ zIndex: 1 }}>
-                <Navbar />
+                <Navbar onOpenHelper={() => setHelperOpen(true)} />
                 <main className="flex-1">
                   <AppRoutes />
                 </main>
                 <Footer />
               </div>
+
+              {/* ── MoPrix Helper floating button ── */}
+              <button
+                onClick={() => setHelperOpen(v => !v)}
+                className="fixed bottom-6 right-6 z-[9997] flex items-center gap-2.5 px-4 py-3 rounded-2xl text-white font-bold text-sm transition-all"
+                style={{
+                  background: helperOpen
+                    ? 'linear-gradient(135deg,#1e40af,#0e7490)'
+                    : 'linear-gradient(135deg,#2563eb,#06b6d4)',
+                  boxShadow: helperOpen
+                    ? '0 8px 24px rgba(37,99,235,0.5)'
+                    : '0 8px 32px rgba(37,99,235,0.45)',
+                  transform: helperOpen ? 'scale(0.97)' : 'scale(1)',
+                }}
+                onMouseEnter={e => { if (!helperOpen) e.currentTarget.style.transform = 'scale(1.05)'; }}
+                onMouseLeave={e => { if (!helperOpen) e.currentTarget.style.transform = 'scale(1)'; }}
+                aria-label="Open MoPrix Helper"
+              >
+                <Sparkles size={17} className={helperOpen ? '' : 'animate-pulse2'} />
+                <span className="hidden sm:inline">MoPrix Helper</span>
+              </button>
+
+              {/* ── Helper panel ── */}
+              {helperOpen && <MoprixHelper onClose={() => setHelperOpen(false)} />}
 
               <Toaster
                 position="bottom-right"
@@ -44,9 +70,10 @@ export default function App() {
                     border: '1px solid rgba(255,255,255,0.8)',
                     color: '#0f172a',
                     boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                    marginBottom: '70px',
                   },
-                  success: { style: { background: '#22C55E', color: '#fff', border: 'none' } },
-                  error:   { style: { background: '#EF4444', color: '#fff', border: 'none' } },
+                  success: { style: { background: '#22C55E', color: '#fff', border: 'none', marginBottom: '70px' } },
+                  error:   { style: { background: '#EF4444', color: '#fff', border: 'none', marginBottom: '70px' } },
                 }}
               />
             </BrowserRouter>

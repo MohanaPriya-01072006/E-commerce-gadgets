@@ -10,9 +10,20 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ message: 'No order items' });
     }
 
+    // Sanitise product references — strip any value that isn't a valid ObjectId
+    // (local seed products have numeric ids which Mongoose can't cast)
+    const { Types } = require('mongoose');
+    const sanitisedItems = orderItems.map(item => ({
+      name:     item.name,
+      quantity: item.quantity,
+      image:    item.image,
+      price:    item.price,
+      product:  Types.ObjectId.isValid(item.product) ? item.product : null,
+    }));
+
     const order = new Order({
       user: req.user._id,
-      orderItems,
+      orderItems: sanitisedItems,
       shippingAddress,
       paymentMethod,
       itemsPrice,
@@ -24,6 +35,7 @@ const createOrder = async (req, res) => {
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
   } catch (error) {
+    console.error('Order create error:', error.message);
     res.status(500).json({ message: error.message });
   }
 };

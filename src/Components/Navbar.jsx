@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, Menu, X, Heart, User, ChevronDown, LogOut, Package, LayoutDashboard } from 'lucide-react';
+import { ShoppingCart, Search, Menu, X, Heart, User, ChevronDown, LogOut, Package, LayoutDashboard, Sparkles } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
 import { useAuth } from '../Context/AuthContext';
 import { categories } from '../Data/products';
@@ -12,7 +12,7 @@ const navLinks = [
   { label: 'Contact', to: '/contact' },
 ];
 
-export default function Navbar() {
+export default function Navbar({ onOpenHelper }) {
   const { cartCount } = useCart();
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const location = useLocation();
@@ -182,6 +182,20 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-1 ml-auto">
+            {/* MoPrix Helper button — desktop */}
+            <button
+              onClick={onOpenHelper}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold text-white transition-all mr-1"
+              style={{
+                background: 'linear-gradient(135deg,#2563eb,#06b6d4)',
+                boxShadow: '0 4px 12px rgba(37,99,235,0.3)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 18px rgba(37,99,235,0.45)'}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(37,99,235,0.3)'}
+            >
+              <Sparkles size={14} />
+              Helper
+            </button>
             {/* Search toggle (mobile) */}
             <button
               onClick={() => setSearchOpen(v => !v)}
@@ -355,6 +369,12 @@ export default function Navbar() {
         </div>
 
         <div className="p-4 border-t border-slate-100 mt-2 space-y-2">
+          {/* MoPrix Helper — mobile */}
+          <button onClick={() => { setMobileOpen(false); onOpenHelper?.(); }}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white mb-1"
+            style={{ background: 'linear-gradient(135deg,#2563eb,#06b6d4)', boxShadow: '0 4px 14px rgba(37,99,235,0.35)' }}>
+            <Sparkles size={15} /> MoPrix Helper — Find Your Gadget
+          </button>
           {isAuthenticated ? (
             <>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 mb-3">
