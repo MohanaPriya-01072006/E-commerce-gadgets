@@ -175,6 +175,7 @@ export default function AdminLayout() {
             <Route path="enquiries" element={<AdminEnquiries />} />
             <Route path="applications" element={<AdminApplications />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="analytics" element={<AdminDashboard />} />
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center min-h-64 gap-4">
                 <div className="text-5xl">🚧</div>

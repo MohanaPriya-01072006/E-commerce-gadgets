@@ -25,7 +25,7 @@ export default function Privacy() {
         {/* Main Content */}
         <div className="space-y-8">
           {/* Introduction */}
-          <section className="card p-8">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
             <h2 className="font-display font-bold text-2xl text-secondary-900 dark:text-white mb-4">
               1. Introduction
             </h2>
@@ -38,7 +38,7 @@ export default function Privacy() {
           </section>
 
           {/* Information We Collect */}
-          <section className="card p-8">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                 <Eye className="text-primary" size={24} />
@@ -81,7 +81,7 @@ export default function Privacy() {
           </section>
 
           {/* How We Use Your Information */}
-          <section className="card p-8">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
                 <User className="text-success" size={24} />
@@ -105,7 +105,7 @@ export default function Privacy() {
           </section>
 
           {/* Data Security */}
-          <section className="card p-8">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
                 <Lock className="text-purple-600" size={24} />
@@ -130,7 +130,7 @@ export default function Privacy() {
           </section>
 
           {/* Third-Party Services */}
-          <section className="card p-8">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
                 <Cookie className="text-warning" size={24} />
@@ -154,7 +154,7 @@ export default function Privacy() {
           </section>
 
           {/* Your Rights */}
-          <section className="card p-8">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
                 <Trash2 className="text-danger" size={24} />
@@ -180,7 +180,7 @@ export default function Privacy() {
           </section>
 
           {/* Contact */}
-          <section className="card p-8 bg-gradient-brand text-white">
+          <section className="bg-gradient-brand rounded-2xl p-8 shadow-sm border border-transparent text-white">
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
                 <Mail className="text-white" size={24} />

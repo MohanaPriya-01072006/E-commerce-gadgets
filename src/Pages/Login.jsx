@@ -160,7 +160,7 @@ export default function Login() {
               </div>
               {mode === 'admin' && (
                 <p className="text-xs text-slate-400 mt-1.5">
-                  Hint: <span className="font-mono font-bold text-purple-500">Priya@123</span>
+                  Admin Credentials: <span className="font-mono font-bold text-purple-500">priya123@gmail.com</span> / <span className="font-mono font-bold text-purple-500">Priya@123</span>
                 </p>
               )}
             </div>

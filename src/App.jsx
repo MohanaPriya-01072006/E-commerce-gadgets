@@ -32,26 +32,7 @@ export default function App() {
                 <Footer />
               </div>
 
-              {/* ── MoPrix Helper floating button ── */}
-              <button
-                onClick={() => setHelperOpen(v => !v)}
-                className="fixed bottom-6 right-6 z-[9997] flex items-center gap-2.5 px-4 py-3 rounded-2xl text-white font-bold text-sm transition-all"
-                style={{
-                  background: helperOpen
-                    ? 'linear-gradient(135deg,#1e40af,#0e7490)'
-                    : 'linear-gradient(135deg,#2563eb,#06b6d4)',
-                  boxShadow: helperOpen
-                    ? '0 8px 24px rgba(37,99,235,0.5)'
-                    : '0 8px 32px rgba(37,99,235,0.45)',
-                  transform: helperOpen ? 'scale(0.97)' : 'scale(1)',
-                }}
-                onMouseEnter={e => { if (!helperOpen) e.currentTarget.style.transform = 'scale(1.05)'; }}
-                onMouseLeave={e => { if (!helperOpen) e.currentTarget.style.transform = 'scale(1)'; }}
-                aria-label="Open MoPrix Helper"
-              >
-                <Sparkles size={17} className={helperOpen ? '' : 'animate-pulse2'} />
-                <span className="hidden sm:inline">MoPrix Helper</span>
-              </button>
+              {/* MoPrix Helper floating button removed as requested */}
 
               {/* ── Helper panel ── */}
               {helperOpen && <MoprixHelper onClose={() => setHelperOpen(false)} />}
