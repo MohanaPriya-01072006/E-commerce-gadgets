@@ -2,59 +2,62 @@ const Order = require('../models/Order');
 
 // @desc    Create new order
 // @route   POST /api/orders
+// @access  Private
 const createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
+    const {
+      orderItems, shippingAddress, paymentMethod,
+      itemsPrice, taxPrice, shippingPrice, totalPrice,
+    } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({ message: 'No order items' });
     }
 
-    // Sanitise product references — store as plain string to avoid ObjectId cast errors
+    // Normalise each item — convert product id to a plain string so Mongoose
+    // never tries to cast a numeric seed id (e.g. 7) to ObjectId.
     const sanitisedItems = orderItems.map(item => ({
-      name:     item.name,
-      quantity: item.quantity,
-      image:    item.image,
-      price:    item.price,
-      product:  String(item.product || item._id || item.id || ''),
+      name:     String(item.name     || ''),
+      quantity: Number(item.quantity || 1),
+      image:    String(item.image    || ''),
+      price:    Number(item.price    || 0),
+      product:  String(item.product  ?? item._id ?? item.id ?? ''),
     }));
 
-    const order = new Order({
-      user: req.user._id,
-      orderItems: sanitisedItems,
+    const order = await Order.create({
+      user:            req.user._id,
+      orderItems:      sanitisedItems,
       shippingAddress,
       paymentMethod,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
+      itemsPrice:   Number(itemsPrice   || 0),
+      taxPrice:     Number(taxPrice     || 0),
+      shippingPrice:Number(shippingPrice|| 0),
+      totalPrice:   Number(totalPrice   || 0),
     });
 
-    const createdOrder = await order.save();
-    res.status(201).json(createdOrder);
+    res.status(201).json(order);
   } catch (error) {
-    console.error('Order create error:', error.message);
+    console.error('createOrder error:', error.message);
     res.status(500).json({ message: error.message });
   }
 };
 
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
+// @access  Private
 const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate('user', 'name email');
-    if (order) {
-      res.json(order);
-    } else {
-      res.status(404).json({ message: 'Order not found' });
-    }
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    res.json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// @desc    Get logged in user orders
+// @desc    Get logged-in user's orders
 // @route   GET /api/orders/myorders
+// @access  Private
 const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
@@ -66,9 +69,12 @@ const getMyOrders = async (req, res) => {
 
 // @desc    Get all orders (Admin)
 // @route   GET /api/orders
+// @access  Private/Admin
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({}).populate('user', 'name email').sort({ createdAt: -1 });
+    const orders = await Order.find({})
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -77,12 +83,11 @@ const getOrders = async (req, res) => {
 
 // @desc    Update order status (Admin)
 // @route   PUT /api/orders/:id/status
+// @access  Private/Admin
 const updateOrderStatus = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
+    if (!order) return res.status(404).json({ message: 'Order not found' });
 
     order.status = req.body.status || order.status;
 
@@ -95,8 +100,8 @@ const updateOrderStatus = async (req, res) => {
       order.paidAt = Date.now();
     }
 
-    const updatedOrder = await order.save();
-    res.json(updatedOrder);
+    const updated = await order.save();
+    res.json(updated);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -104,33 +109,30 @@ const updateOrderStatus = async (req, res) => {
 
 // @desc    Get dashboard stats (Admin)
 // @route   GET /api/orders/stats
+// @access  Private/Admin
 const getDashboardStats = async (req, res) => {
   try {
-    const totalOrders = await Order.countDocuments();
-    const totalRevenueAgg = await Order.aggregate([
-      { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+    const totalOrders    = await Order.countDocuments();
+    const pendingOrders  = await Order.countDocuments({ status: 'Pending' });
+    const deliveredOrders= await Order.countDocuments({ status: 'Delivered' });
+
+    const revenueAgg = await Order.aggregate([
+      { $group: { _id: null, total: { $sum: '$totalPrice' } } },
     ]);
-    const totalRevenue = totalRevenueAgg.length > 0 ? totalRevenueAgg[0].total : 0;
+    const totalRevenue = revenueAgg[0]?.total || 0;
 
-    const pendingOrders = await Order.countDocuments({ status: 'Pending' });
-    const deliveredOrders = await Order.countDocuments({ status: 'Delivered' });
-
-    // Recent orders
     const recentOrders = await Order.find({})
       .populate('user', 'name email')
       .sort({ createdAt: -1 })
       .limit(5);
 
-    res.json({
-      totalOrders,
-      totalRevenue,
-      pendingOrders,
-      deliveredOrders,
-      recentOrders,
-    });
+    res.json({ totalOrders, totalRevenue, pendingOrders, deliveredOrders, recentOrders });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { createOrder, getOrderById, getMyOrders, getOrders, updateOrderStatus, getDashboardStats };
+module.exports = {
+  createOrder, getOrderById, getMyOrders,
+  getOrders, updateOrderStatus, getDashboardStats,
+};
