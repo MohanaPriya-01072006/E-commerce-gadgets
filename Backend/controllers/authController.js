@@ -48,9 +48,15 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      // Auto-upgrade admin@moprix.in to admin
+      if (email === 'admin@moprix.in' && !user.isAdmin) {
+        user.isAdmin = true;
+        await user.save();
+      }
+
       res.json({
         _id: user._id,
         name: user.name,

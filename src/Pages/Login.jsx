@@ -37,9 +37,7 @@ export default function Login() {
     const result = await login(form.email, form.password);
     setBusy(false);
     if (result.success) {
-      const userInfoStr = localStorage.getItem('userInfo');
-      const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null;
-      if (userInfo && userInfo.isAdmin) {
+      if (result.user && result.user.isAdmin) {
         toast.success('Welcome back, Admin!');
         window.location.href = '/admin';   /* hard reload so AuthContext picks up localStorage */
       } else {
