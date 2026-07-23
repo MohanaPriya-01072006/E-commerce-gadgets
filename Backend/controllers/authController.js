@@ -51,8 +51,8 @@ const loginUser = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Auto-upgrade admin@moprix.in to admin
-      if (email === 'admin@moprix.in' && !user.isAdmin) {
+      // Auto-upgrade admin email to isAdmin if not already set
+      if ((email === 'priya123@gmail.com' || email === 'admin@moprix.in') && !user.isAdmin) {
         user.isAdmin = true;
         await user.save();
       }
