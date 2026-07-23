@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, AlertCircle, User, Shield } from 'lucide-react';
 import { useAuth } from '../Context/AuthContext';
 import toast from 'react-hot-toast';
 
-/* ── Hard-coded admin credentials ── */
+/* ── Default admin credentials ── */
 const ADMIN_EMAIL    = 'admin@moprix.in';
-const ADMIN_PASSWORD = 'Admin@123';
 
 const glass = {
   background: 'rgba(255,255,255,0.82)',
@@ -17,8 +16,10 @@ const glass = {
 };
 
 export default function Login() {
-  const { login, loading } = useAuth();
+  const { login, logout, loading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/';
 
   const [mode, setMode]     = useState('user');   // 'user' | 'admin'
   const [form, setForm]     = useState({ email: '', password: '' });
@@ -28,23 +29,25 @@ export default function Login() {
 
   const set = (k) => (e) => { setForm(p => ({ ...p, [k]: e.target.value })); setError(''); };
 
-  /* ── Admin login (local check — no backend needed) ── */
-  const handleAdminLogin = (e) => {
+  /* ── Admin login (authenticates against the backend) ── */
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     setError('');
-    if (form.email.trim() === ADMIN_EMAIL && form.password === ADMIN_PASSWORD) {
-      /* Inject an admin session into AuthContext via localStorage directly */
-      const adminUser = {
-        _id: 'admin-local',
-        name: 'Moprix Admin',
-        email: ADMIN_EMAIL,
-        isAdmin: true,
-        token: 'local-admin-token',
-      };
-      localStorage.setItem('userInfo', JSON.stringify(adminUser));
-      window.location.href = '/admin';   /* hard reload so AuthContext picks up localStorage */
+    setBusy(true);
+    const result = await login(form.email, form.password);
+    setBusy(false);
+    if (result.success) {
+      const userInfoStr = localStorage.getItem('userInfo');
+      const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null;
+      if (userInfo && userInfo.isAdmin) {
+        toast.success('Welcome back, Admin!');
+        window.location.href = '/admin';   /* hard reload so AuthContext picks up localStorage */
+      } else {
+        logout();
+        setError('Access denied. You are not authorized as an admin.');
+      }
     } else {
-      setError('Invalid admin credentials.');
+      setError(result.message || 'Invalid admin credentials.');
     }
   };
 
@@ -57,7 +60,7 @@ export default function Login() {
     setBusy(false);
     if (result.success) {
       toast.success('Welcome back!');
-      navigate('/');
+      navigate(redirect);
     } else {
       setError(result.message || 'Login failed. Please try again.');
     }

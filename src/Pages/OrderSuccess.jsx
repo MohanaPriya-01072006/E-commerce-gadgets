@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, ShoppingBag, Home, Truck, Package } from 'lucide-react';
 
-const orderId = `MX-${Math.floor(100000 + Math.random() * 900000)}`;
-
 export default function OrderSuccess() {
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get('orderId') || `MX-${Math.floor(100000 + Math.random() * 900000)}`;
+
   return (
     <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex items-center justify-center px-4 py-16">
       <div className="max-w-lg w-full text-center">
@@ -16,7 +17,7 @@ export default function OrderSuccess() {
 
         <div className="card p-5 mb-6 text-center">
           <p className="text-sm text-secondary-500 mb-1">Your Order ID</p>
-          <p className="font-black text-2xl text-primary tracking-widest">{orderId}</p>
+          <p className="font-black text-lg text-primary tracking-wider" style={{ wordBreak: 'break-all' }}>{orderId}</p>
           <p className="text-xs text-secondary-400 mt-1">Save this for tracking.</p>
         </div>
 

@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, ChevronRight, Lock, CreditCard, Truck, ClipboardList } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
+import { useAuth } from '../Context/AuthContext';
+import api from '../Services/api';
+import toast from 'react-hot-toast';
 
 const STEPS = [
   { id: 0, label: 'Shipping', icon: Truck },
@@ -35,12 +38,20 @@ function validateShipping(d) {
 
 export default function Checkout() {
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [shipping, setShipping] = useState({});
   const [payment, setPayment] = useState({ method: 'card' });
   const [errors, setErrors] = useState({});
   const [placing, setPlacing] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error('Please sign in to complete your checkout');
+      navigate('/login?redirect=/checkout');
+    }
+  }, [isAuthenticated, navigate]);
 
   const tax = Math.round(cartTotal * 0.18);
   const shipFee = cartTotal > 10000 ? 0 : 299;
@@ -62,9 +73,44 @@ export default function Checkout() {
     setStep(s => s + 1);
   };
 
-  const handlePlace = () => {
+  const handlePlace = async () => {
     setPlacing(true);
-    setTimeout(() => { clearCart(); navigate('/order-success'); }, 2000);
+    try {
+      const orderItems = cartItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        image: item.image,
+        price: item.price,
+        product: item.id,
+      }));
+
+      const shippingAddress = {
+        fullName: `${shipping.firstName} ${shipping.lastName}`,
+        address: shipping.address,
+        city: shipping.city,
+        postalCode: shipping.pincode,
+        country: 'India',
+      };
+
+      const orderData = {
+        orderItems,
+        shippingAddress,
+        paymentMethod: payment.method,
+        itemsPrice: cartTotal,
+        taxPrice: tax,
+        shippingPrice: shipFee,
+        totalPrice: total,
+      };
+
+      const { data } = await api.post('/orders', orderData);
+      clearCart();
+      toast.success('Order placed successfully!');
+      navigate(`/order-success?orderId=${data._id}`);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to place order. Please try again.');
+    } finally {
+      setPlacing(false);
+    }
   };
 
   const sf = (k, v) => setShipping(p => ({ ...p, [k]: v }));

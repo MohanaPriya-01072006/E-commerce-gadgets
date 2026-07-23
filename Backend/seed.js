@@ -132,14 +132,14 @@ async function seed() {
 
     // Create admin user
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('admin123', salt);
+    const hashedPassword = await bcrypt.hash('Admin@123', salt);
     await User.create({
       name: 'Admin',
-      email: 'admin@moprix.com',
+      email: 'admin@moprix.in',
       password: hashedPassword,
       isAdmin: true,
     });
-    console.log('Admin user created: admin@moprix.com / admin123');
+    console.log('Admin user created: admin@moprix.in / Admin@123');
 
     // Create demo customer
     const customerPassword = await bcrypt.hash('user123', salt);
