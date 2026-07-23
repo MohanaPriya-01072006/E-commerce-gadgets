@@ -5,7 +5,7 @@ import { useAuth } from '../Context/AuthContext';
 import toast from 'react-hot-toast';
 
 /* ── Default admin credentials ── */
-const ADMIN_EMAIL    = 'admin@moprix.in';
+const ADMIN_EMAIL    = 'priya123@gmail.com';
 
 const glass = {
   background: 'rgba(255,255,255,0.82)',
@@ -136,7 +136,7 @@ export default function Login() {
               <div className="relative">
                 <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input type="email" required value={form.email} onChange={set('email')}
-                  placeholder={mode === 'admin' ? 'admin@moprix.in' : 'you@example.com'}
+                  placeholder={mode === 'admin' ? 'priya123@gmail.com' : 'you@example.com'}
                   className="input pl-10" />
               </div>
             </div>
@@ -160,7 +160,7 @@ export default function Login() {
               </div>
               {mode === 'admin' && (
                 <p className="text-xs text-slate-400 mt-1.5">
-                  Hint: <span className="font-mono font-bold text-purple-500">Admin@123</span>
+                  Hint: <span className="font-mono font-bold text-purple-500">Priya@123</span>
                 </p>
               )}
             </div>
