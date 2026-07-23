@@ -83,6 +83,36 @@ export default function AdminDashboard() {
         </Grid>
       </Grid>
 
+      {/* Analytics Chart */}
+      <Box sx={{ mb: 4 }}>
+        <Card sx={{ borderRadius: 3, border: '1px solid #e2e8f0', p: 3, bgcolor: '#ffffff' }}>
+          <Typography sx={{ fontWeight: 700, fontSize: 16, mb: 3 }}>Revenue Analytics (Last 7 Days)</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'flex-end', height: 220, gap: 2, pt: 2 }}>
+            {[
+              { day: 'Mon', revenue: 12000 },
+              { day: 'Tue', revenue: 19000 },
+              { day: 'Wed', revenue: 15000 },
+              { day: 'Thu', revenue: 22000 },
+              { day: 'Fri', revenue: 28000 },
+              { day: 'Sat', revenue: 35000 },
+              { day: 'Sun', revenue: 29000 },
+            ].map(data => (
+              <Box key={data.day} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ 
+                  width: '100%', 
+                  background: 'linear-gradient(180deg, #3b82f6 0%, #93c5fd 100%)',
+                  height: `${(data.revenue / 35000) * 100}%`,
+                  borderRadius: '6px 6px 0 0',
+                  transition: 'all 0.3s ease',
+                  '&:hover': { opacity: 0.8, cursor: 'pointer' }
+                }} title={`₹${data.revenue.toLocaleString()}`} />
+                <Typography sx={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>{data.day}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Card>
+      </Box>
+
       <Grid container spacing={3}>
         {/* Recent Orders */}
         <Grid item xs={12} md={7}>

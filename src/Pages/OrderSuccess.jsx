@@ -15,13 +15,13 @@ export default function OrderSuccess() {
         <h1 className="font-display font-black text-4xl text-secondary-900 dark:text-white mb-3">Order Confirmed!</h1>
         <p className="text-secondary-500 mb-8 leading-relaxed max-w-sm mx-auto">Thank you for shopping with Moprix! Your premium gadgets are being prepared for express dispatch.</p>
 
-        <div className="card p-5 mb-6 text-center">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 mb-6 text-center">
           <p className="text-sm text-secondary-500 mb-1">Your Order ID</p>
           <p className="font-black text-lg text-primary tracking-wider" style={{ wordBreak: 'break-all' }}>{orderId}</p>
           <p className="text-xs text-secondary-400 mt-1">Save this for tracking.</p>
         </div>
 
-        <div className="card p-5 mb-8 text-left">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 mb-8 text-left">
           <p className="font-bold text-secondary-900 dark:text-white mb-4">What happens next?</p>
           <div className="space-y-4">
             {[
